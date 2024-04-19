@@ -1,0 +1,279 @@
+{% extends 'shared/_layout.html' %}
+{% load render_partial %}
+{% load sorl_thumbnail %}
+{% load thumbnail %}
+
+{% load poll_extras %}
+{% block custom_header_references %}
+    <link href="/static/lib/image-lightbox/css/lightbox.min.css" rel="stylesheet">
+{% endblock %}
+{% block custom_footer_references %}
+    <script src="/static/lib/image-lightbox/js/lightbox.min.js"></script>
+{% endblock %}
+{% block title %}{{ episode.name }}{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-9 " style="margin-top: 30px">
+
+                    <div class="episode-details"><!--episode-details-->
+                        <div class="col-sm-5">
+                            <div>
+                                {% if episode.image %}
+                                    {% thumbnail episode.image "200x200" quality=90 crop='center' as im %}
+                                        <img class="product-detail-image" src="{{ im.url }}">
+                                    {% endthumbnail %}
+                                {% else %}
+                                    <img src="{{ episode.image }}" alt=""/>
+                                {% endif %}
+                                <h3>
+                                    <a id="show_large_image_modal" href="{{ episode.image.url }}"
+                                       data-lightbox="episode-image">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                                </h3>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="episode-information"><!--/episode-information-->
+                                <div>
+                                    <h2>{{ episode.name }}</h2>
+                                    <h6>Channel : {{ episode.provider }}</h6>
+
+                                </div>
+                                <div style="margin: 10px">
+                                    <a href="{% url 'playlists_to_add' item_slug=episode.slug type=episode.type %}"
+                                       style="border-radius: 50px;" class="btn btn--red" type="submit">
+                                        Add To Playlists
+                                    </a>
+
+                                    <button onclick="likeItem('{{ episode.type }}', '{{ episode.id }}')"
+                                            style="border-radius: 50px;" class="btn btn--red" type="submit">
+                                        <i class="fa fa-heart"></i> Like
+                                    </button>
+
+                                    <button onclick="unLikeItem('{{ episode.type }}', '{{ episode.id }}')"
+                                            style="border-radius: 50px;" class="btn btn--red" type="submit"><i
+                                            class="fa fa-minus-square"></i> UnLike
+                                    </button>
+
+                                </div>
+                                <div><!--/play section-->
+                                    {% if episode.music != "" %}
+                                        <audio controls>
+                                            <source src="{{ episode.music.url }}" type="audio/mpeg">
+                                        </audio>
+                                    {% else %}
+                                        <div class="alert alert-warning">
+                                            There is no Music File for this Item
+                                        </div>
+                                    {% endif %}
+
+                                </div><!--/play section-->
+                                <div>
+                                    <span>
+                                        <span><b><i
+                                                class="fa fa-clock-o"></i>   Duration :</b> {{ episode.duration }}</span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <span><b><i
+                                                class="fa fa-calendar"></i>   Created At :</b> {{ episode.create_at }}</span>
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <span>
+                                        <span><b><i
+                                                class="fa fa-comment"></i>   Comments :</b> {{ episode.comments_count }}</span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <span><b><i
+                                                class="fa fa-heart "></i>  Likes :</b> {{ episode.likes_count }}</span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <span><b><i class="fa fa-eye"></i>   Views :</b> {{ episode.view_count }}</span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <span><b><i class="fa fa-eye"></i>   Mentions :</b> {{ mentions }}</span>
+                                    </span>
+                                </div>
+
+                            </div><!--/episode-information-->
+                        </div>
+                    </div><!--/episode-details-->
+
+                    <div class="category-tab shop-details-tab"><!--category-tab-->
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="details">
+                                <div class="col-md-12">
+                                    <b>Description :</b> {{ episode.description }}
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--/description-->
+                
+                    <div class="media comments">
+                        {% if episode.provider %}
+                            <a class="pull-left" href="#">
+                                {% if episode.provider.author.avatar %}
+                                    {% thumbnail episode.provider.author.avatar "50x50" quality=100 crop='center' as im %}
+                                        <img class="user-avatar" src="{{ im.url }}">
+                                    {% endthumbnail %}
+                                {% else %}
+                                    <i class="fa fa-home icon"></i>
+                                {% endif %}
+
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading">About Channel's Author : {{ episode.author }}</h4>
+                                {% if episode.provider.author.description %}
+                                    <p>{{ episode.provider.author.description }}</p>
+                                {% else %}
+                                    <p>The author have No Description</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div><!--Author of the channel-->
+                
+                    <div class="recommended_items"><!--related_items-->
+                        <h2 class="title text-center">Other Episodes of Provider</h2>
+
+                        {% for item in related_episodes_by_channel %}
+                            {% include 'includes/episode_item_partial.html' with episode=item col_size=3 %}
+                        {% endfor %}
+
+                    </div><!--/related_items-->
+
+                    <div id="comments_area" class="response-area">
+                        <h2>Comments for this episode: ({{ comments_count }}) </h2>
+                        <ul class="media-list">
+                            {% for comment in comments %}
+                                {% if comment.comment_set.all %}
+                                    <!--Answer_section-->
+                                    <li class="media" id="single-comment-box-{{ comment.id }}">
+                                        <a class="pull-left" href="#">
+                                            {% if comment.user.avatar %}
+                                                {% thumbnail comment.user.avatar "100x100" quality=100 crop='center' as im %}
+                                                    <img class="user-avatar" src="{{ im.url }}">
+                                                {% endthumbnail %}
+                                            {% else %}
+                                                <i class="fa fa-home icon"></i>
+                                            {% endif %}
+                                        </a>
+                                        <div class="media-body">
+                                            <ul class="sinlge-post-meta">
+                                                <li><i class="fa fa-user" style="background-color: #4272d7"></i>{{ comment.user }}</li>
+                                                <li><i class="fa fa-clock-o" style="background-color: #4272d7"></i> {{ comment.create_at | showjalalidate }}</li>
+                                            </ul>
+                                            <p>{{ comment.text }}</p>
+                                            <a class="btn btn--green" onclick="fillParentId({{ comment.id }})"><i class="fa fa-reply"></i> Reply</a>
+                                            {% if comment.user == request.user %}
+                                                <a class="btn btn--red" onclick="deleteComment({{ comment.id }})"><i
+                                                        class="fa fa-minus-square"></i> Delete</a>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                    {% for subcomment in comment.comment_set.all %}
+                                        <li class="media second-media" id="single-comment-box-{{ subcomment.id }}">
+                                            <a class="pull-left" href="#">
+                                                {% if subcomment.user.avatar %}
+                                                    {% thumbnail subcomment.user.avatar "100x100" crop='center' as im %}
+                                                        <img class="user-avatar" src="{{ im.url }}">
+                                                    {% endthumbnail %}
+                                                {% else %}
+                                                    <i class="fa fa-home icon"></i>
+                                                {% endif %}
+                                            </a>
+                                            <div class="media-body">
+                                                <ul class="sinlge-post-meta">
+                                                    <li><i class="fa fa-user"
+                                                           style="background-color: #4272d7"></i>{{ subcomment.user }}</li>
+                                                    <li><i class="fa fa-clock-o" style="background-color: #4272d7"></i> {{ subcomment.create_at | showjalalidate }}
+                                                    </li>
+                                                </ul>
+                                                <p>{{ subcomment.text }}</p>
+                                                {% if subcomment.user == request.user %}
+                                                    <a class="btn btn--red" onclick="deleteComment({{ subcomment.id }})"><i class="fa fa-minus-square"></i> Delete</a>
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                    <!--Answer_section-->
+                                {% else %}
+                                    <li class="media">
+                                        <a class="pull-left" href="#">
+                                            {% if comment.user.avatar %}
+                                                {% thumbnail comment.user.avatar "100x100" crop='center' as im %}
+                                                    <img class="user-avatar" src="{{ im.url }}">
+                                                {% endthumbnail %}
+                                            {% else %}
+                                                <i class="fa fa-home icon"></i>
+                                            {% endif %}
+
+                                        </a>
+                                        <div class="media-body">
+                                            <ul class="sinlge-post-meta">
+                                                <li><i class="fa fa-user"
+                                                       style="background-color: #4272d7"></i>{{ comment.user }}</li>
+                                                <li><i class="fa fa-clock-o"
+                                                       style="background-color: #4272d7"></i> {{ comment.create_at | showjalalidate }}
+                                                </li>
+                                            </ul>
+                                            <p>{{ comment.text }}</p>
+                                            <a class="btn btn--green" onclick="fillParentId({{ comment.id }})"><i class="fa fa-reply"></i> Reply</a>
+                                            {% if comment.user == request.user %}
+                                                <a class="btn btn--red" onclick="deleteComment({{ comment.id }})"><i
+                                                        class="fa fa-minus-square"></i> Delete</a>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div><!--/Response-area-->
+
+                    <div class="replay-box">
+                        {% if request.user.is_authenticated %}
+                            <div class="media">
+                                <div class="col-sm-12">
+                                    <h2 id="start_form" class="title text-center">Comment</h2>
+                                    <div class="text-area">
+                                        <input type="hidden" value="" id="parent_id">
+                                        <textarea placeholder="Type your Comment ..." class="form-control text-area"
+                                                  id="CommentText" name="message" rows="11"></textarea>
+                                        <a class="btn btn--red" onclick="sendEpisodeComment({{ episode.id }})">Send</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                To Post Comment You Should<a href="{% url 'login_page' %}"> Login </a>
+                            </div>
+                        {% endif %}
+                    </div><!--/Repaly Box-->
+
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="left-sidebar">
+                        {% render_partial 'contents.views.sidebar_categories_component' %}
+                        {% render_partial 'contents.views.sidebar_channels_component' %}
+                        {% render_partial 'contents.views.sidebar_tags_component' %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

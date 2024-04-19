@@ -1,0 +1,44 @@
+.errorlist {
+    padding-right: 0 !important;
+}
+
+.errorlist li {
+    color: red;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}
+
+.icon{
+    color: #F55B23;
+}
+
+.user-avatar {
+    border-radius:50%;
+    border: 1px solid #ddd
+}
+
+.product-detail-image {
+    border-radius:5%;
+    border: 1px solid #ddd
+}
+
+.choose ul li button {
+    color: #B3AFA8;
+    font-family: sans-serif;
+    font-size: 13px;
+    padding-left: 0;
+    padding-right: 0;
+    height: 40px;
+}
+
+.choose ul li  button i {
+    margin-left: 5px;
+}
+
+.choose ul li button:hover {
+    background: none;
+    color: #F55B23;
+}
+

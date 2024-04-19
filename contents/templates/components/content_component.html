@@ -1,0 +1,129 @@
+{% load thumbnail %}
+
+<div class="page-wrapper-50 bg-gra-02 p-t-10 p-b-10 font-poppins">
+    <div class="wrapper wrapper--w680" style="margin-top: 2.5%;">
+        <div class="card card-4">
+            <div class="card-body">
+                <h2 class="title" style="color: #f55b23;"><a href="{% url 'user_panel_dashboard' %}"><i
+                        class="fa fa-{{ icon }} icon"></i> {{ title }}</a></h2>
+                <ul class="list-group">
+                    {% if title == "Categories" or title == "Tags" or title == 'Favorites' or title == 'Followings' %}
+                        {% for object in object_list %}
+
+                            <li class="list-group-item"
+                                style="text-align: center ; border-radius: 50px;margin-top: 5px">
+
+                                {% if object.type == 'category' %}
+                                    <a href="http://localhost:8000/content/related-items/category/{{ object.slug }}"> {{ object }}</a>
+
+                                {% elif object.type == 'tag' %}
+                                    <a href="http://localhost:8000/content/related-items/tag/{{ object.slug }}"> {{ object }}</a>
+                                {% elif title == 'Favorites' %}
+                                    <a href="{{ object.item.url }}">
+                                        <i class="fa fa-play icon"></i> Episode : ({{ object }})
+                                        <i class="fa fa-heart icon"></i> Likes: {{ object.item.likes_count }}
+                                    </a>
+                                    <button onclick="unLikeItem('{{ object.item.type }}', '{{ object.item.id }}')"
+                                            style="border: 0px;float: right ; margin-right: 5px " type="submit"><i
+                                            class="fa fa-minus-square"></i> UnLike
+                                    </button>
+                                {% elif title == 'Followings' %}
+                                    <a href="{{ object.item.url }}">
+                                        <i class="fa fa-dot-circle-o icon"></i> Channel : ({{ object }})
+                                        <i class="fa fa-user-circle icon"></i> Followers:
+                                        ({{ object.item.followers_count }})
+                                    </a>
+                                    <button onclick="unFollowChannel({{ object.item.id }})"
+                                            style="border: 0px; float: right; margin-right: 5px " type="submit"><i
+                                            class="fa fa-minus-square"></i> UnFollow
+                                    </button>
+                                {% endif %}
+
+                            </li>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        {% for object in object_list %}
+                            <li class="row" style="text-align: center ; border-radius: 50px;margin-top: 5px">
+
+                                {% if object.type == 'episode' %}
+
+                                    <div class="col-md-9" style="margin-top: 6px">
+                                        <a href="http://localhost:8000/content/{% if object.type == 'episode' %}episode{% elif object.type == 'show' %}show{% endif %}/{{ object.slug }}">
+                                            {{ object.type|title }} : {{ object }}
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button onclick="deletePlaylistItem('{{ playlist }}', '{{ object.id }}','{{ object.type }}')"
+                                                style="border-radius: 50px;" class="btn btn--red" type="submit">
+                                            Delete
+                                        </button>
+                                    </div>
+
+                                {% elif object.type == 'playlist' %}
+                                    <di class="col-md-3">
+                                        {% if object.image %}
+                                            {% thumbnail object.image "50x50" quality=100 crop='center' as im %}
+                                                <img class="user-avatar" src="{{ im.url }}">
+                                            {% endthumbnail %}
+                                        {% else %}
+                                            <i class="fa fa-home icon"></i>
+                                        {% endif %}
+                                    </di>
+
+                                    <div class="col-md-6" style="margin-top: 15px">
+                                        <a href="{% url 'user_playlist_items_view' slug=object.slug %}"> {{ object }}</a>
+                                    </div>
+
+                                    <div class="col-md-3" style="margin-top: 10px">
+                                        {% if item_slug == "" %}
+                                            <button onclick="deletePlaylist({{ object.id }})"
+                                                    style="border-radius: 50px;" class="btn btn--red" type="submit">
+                                                Delete
+                                            </button>
+                                        {% else %}
+                                            <button onclick="addToPlaylist('{{ object.id }}', '{{ item_slug }}', '{{ item_type }}')"
+                                                    style="border-radius: 50px;" class="btn btn--green" type="submit">
+                                                Add To
+                                            </button>
+                                        {% endif %}
+                                    </div>
+
+                                {% endif %}
+
+                            </li>
+                        {% endfor %}
+
+                    {% endif %}
+
+                    {% if item_slug != "" %}
+                        <li class="row" style="text-align: center ; border-radius: 50px;margin-top: 5px">
+                            <div class="col-md-12" style="margin-top: 25px">
+                                <a href="{% url 'user_panel_dashboard' %}"
+                                   style="border-radius: 50px;" class="btn btn--blue" type="submit">
+                                    Return to Panel
+                                </a>
+                            </div>
+                        </li>
+                    {% endif %}
+
+                    {% if title == 'Playlist' %}
+                        <li class="row" style="text-align: center ; border-radius: 50px;margin-top: 5px">
+                            <div class="col-md-12" style="margin-top: 25px">
+                                <a href="/user-panel/add-playlist/"
+                                   style="border-radius: 50px;" class="btn btn--blue" type="submit">
+                                    <i class="fa fa-plus icon "></i> Add new Playlist
+                                </a>
+                            </div>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+

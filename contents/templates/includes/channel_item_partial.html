@@ -1,0 +1,47 @@
+{% load thumbnail %}
+{% load sorl_thumbnail %}
+{% load poll_extras %}
+{% load render_partial %}
+
+<div class="col-sm-{{ col_size }}">
+    <div class="product-image-wrapper">
+        <div class="single-products">
+            <div class="productinfo text-center">
+                {% if channel.image %}
+                    {% thumbnail channel.image "268x250" quality=100 crop='center' as im %}
+                        <img src="{{ im.url }}">
+                    {% endthumbnail %}
+                {% else %}
+                    <img src="{{ channel.image }}" alt=""/>
+                {% endif %}
+                <h2 style="font-size: 10px">channel : {{ channel.name | slice:30 }}</h2>
+            </div>
+            <div class="product-overlay" style="background-color: {{ color }} ">
+                <div class="overlay-content">
+                    {% include 'includes/content_providers_overlay_content_partial.html' with object=channel %}
+                    <a href="{{ channel.url }}" class="btn btn-default add-to-cart"><i class="fa fa-dot-circle-o"></i>Episodes</a>
+                </div>
+            </div>
+        </div>
+        {% if  state == 1 %}
+            <div class="choose">
+                <ul class="nav nav-pills nav-justified">
+
+                    <li class="row">
+                        <button onclick="followChannel({{ channel.id }})"  style="border: 0px; float: left ; margin-left: 5px" type="submit"><i
+                                class="fa fa-plus-square"></i> Sub
+                        </button>
+                        <div class="col-md-2"></div>
+                        <button st onclick="unFollowChannel({{ channel.id }})"  style="border: 0px; float: right; margin-right: 5px " type="submit"><i
+                                class="fa fa-minus-square"></i> UnSub
+                        </button>
+
+                    </li>
+
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+

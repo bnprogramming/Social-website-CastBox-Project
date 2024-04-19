@@ -1,0 +1,77 @@
+{% load thumbnail %}
+
+<header id="header" style="margin-bottom: 0px;">
+
+    <div class="header-middle">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-12 header-middle-menu">
+                    <div class="shop-menu " >
+                        <ul class="nav navbar-nav " style=" position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);">
+                            {% if request.user.is_authenticated %}
+                                <li>
+                                    <a href="{% url 'user_panel_dashboard' %}"><i class="fa fa-user"></i>User Panel</a>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                    <li><a href="/admin"><i class="fa fa-user-md"></i>Admin Panel</a></li>
+                                {% endif %}
+                                <li>
+                                    <a href="{% url 'logout_page' %}">
+                                        <i class="fa fa-sign-out"></i>Logout</a>
+                                </li>
+
+                            {% else %}
+                                <li><a href="{% url 'register_page' %}"><i class="fa fa-user"></i>      Register</a></li>
+                                <li><a href="{% url 'login_page' %}"><i class="fa fa-sign-in"></i>      Log in</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--/header-middle-->
+
+    <div class="header-bottom"><!--header-bottom-->
+        <div class="container">
+            <div class="row" style=" position: absolute;left: 50%; transform: translate(-50%, -50%); height: 50px">
+
+                <div class="col-sm-12 ">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="mainmenu pull-left">
+                        <ul class="nav navbar-nav collapse navbar-collapse" style="float: left">
+                            <li>
+                                <a href="{% url 'index_page' %}"
+                                   class="{% if request.resolver_match.url_name == 'index_page' %}active{% endif %}">
+                                    Home
+                                </a>
+                            </li>
+                            <li><a href="{% url 'category-list' %}">Categories</a></li>
+                            <li><a href="{% url 'tag_list' %}">Tags</a></li>
+                            <li><a href="{% url 'channel-list' %}">Channels</a></li>
+                            <li><a href="{% url 'episode_list' %}">Episodes</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+
+{#                <div class="col-sm-3">#}
+{#                    <div class="search_box pull-right">#}
+{#                        <input type="text" placeholder="Search"/>#}
+{#                    </div>#}
+{#                </div>#}
+
+            </div>
+        </div>
+    </div><!--/header-bottom-->
+</header>
+
+

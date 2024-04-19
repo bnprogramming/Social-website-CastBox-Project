@@ -1,0 +1,56 @@
+{% extends 'shared/_layout.html' %}
+{% block title %}Main Page{% endblock %}
+{% load sorl_thumbnail %}
+{% load poll_extras %}
+{% block content %}
+    <section>
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="features_items"><!--/New_items-->
+                        {% if latest_items %}
+                            <h2 class="title text-center" style="color: #00A36C">News</h2>
+                            {% for items in latest_items %}
+                                <div class="col-md-12">
+                                    {% for item in items %}
+                                        {% include 'includes/channel_item_partial.html' with channel=item col_size=3  color='rgba(35, 245, 157, 0.68)'%}
+                                    {% endfor %}
+
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div><!--New_items-->
+                    <div class="features_items"><!--/most_popular_items-->
+                        {% if most_popular_items %}
+                            <h2 class="title text-center">Most Popular</h2>
+                            {% for items in most_popular_items %}
+                                <div class="col-md-12">
+                                    {% for item in items %}
+                                        {% include 'includes/channel_item_partial.html' with channel=item col_size=3 %}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div><!--most_popular_items-->
+                    <div class="features_items"><!--/most_followed_items-->
+                        {% if most_followed_items %}
+                            <h2 class="title text-center" style="color:#900C3F ">Most Followed</h2>
+                            {% for items in most_followed_items %}
+                                <div class="col-md-12">
+                                    {% for item in items %}
+                                        {% include 'includes/channel_item_partial.html' with channel=item col_size=3 color='rgba(112, 35, 245, 0.68)'%}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div><!--most_followed_items-->
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

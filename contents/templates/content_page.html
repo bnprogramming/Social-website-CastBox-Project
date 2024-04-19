@@ -1,0 +1,7 @@
+{% extends 'shared/_layout.html' %}
+{% load render_partial %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    {% include 'components/content_component.html' with object_list=objects title=title item_slug=item_slug icon=icon %}
+{% endblock %}
+{% load render_partial %}

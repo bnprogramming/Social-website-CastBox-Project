@@ -1,0 +1,31 @@
+{% load thumbnail %}
+
+<div class="page-wrapper-50 bg-gra-02 p-t-10 p-b-10 font-poppins">
+    <div class="wrapper wrapper--w680" style="margin-top: 2.5%;">
+        <div class="card card-4">
+            <div class="card-body">
+                <div style="color: #f55b23;margin-bottom: 10px">
+                    {% if user.avatar %}
+                        {% thumbnail user.avatar "50x50" quality=100 crop='center' as im %}
+                            <img class="user-avatar" src="{{ im.url }}">
+                        {% endthumbnail %}
+                    {% else %}
+                        <i class="fa fa-home icon"></i>
+                    {% endif %}
+                    User: <a href="">{{ user.username }}</a>
+                </div>
+                <div>
+                    <ul class="list-group">
+                        <li class="list-group-item" style="text-align: center"><a href="{% url 'edit_profile_view' %}"><i class="fa fa-edit icon"></i>  Edit Profile</a></li>
+                        <li class="list-group-item" style="text-align: center"><a href="./user-channel/"><i class="fa fa-compass icon"></i>  Channels</a></li>
+                        <li class="list-group-item" style="text-align: center"><a href="./user-episode/"><i class="fa fa-headphones icon"></i>  Episodes</a></li>
+                        <li class="list-group-item" style="text-align: center"><a href="{% url 'user_playlists_view' %}"><i class="fa fa-play icon"></i>   Playlists</a></li>
+                        <li class="list-group-item" style="text-align: center"><a href="{% url 'favorites_list' %}"><i class="fa fa-heart icon"></i>   Favorites</a></li>
+                        <li class="list-group-item" style="text-align: center"><a href="{% url 'followings_list' %}"><i class="fa fa-users icon"></i>   Followings</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,15 @@
+<h2 class="title text-center">Channels</h2>
+<div class="panel-group category-products" id="accordian">
+    {% for channel in episode_channels %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="{% url 'episode_channels_list' channel=channel.slug  %}">
+                    <span class="badge pull-right"><i class="fa fa-dot-circle-o"></i></span>
+                        {{ channel.name }}
+                </a>
+            </h4>
+        </div>
+        </div>
+    {% endfor %}
+</div>

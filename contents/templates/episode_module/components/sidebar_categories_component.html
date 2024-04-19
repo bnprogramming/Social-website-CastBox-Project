@@ -1,0 +1,15 @@
+<h2 class="title text-center">Categories</h2>
+<div class="panel-group category-products" id="accordian">
+    {% for category in episode_categories %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="{% url 'episode_categories_list' category=category.slug  %}">
+                    <span class="badge pull-right"><i class="fa fa-archive"></i></span>
+                        {{ category.name }}
+                </a>
+            </h4>
+        </div>
+        </div>
+    {% endfor %}
+</div>

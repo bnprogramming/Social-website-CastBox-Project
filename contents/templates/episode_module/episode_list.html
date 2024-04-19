@@ -1,0 +1,68 @@
+{% extends 'shared/_layout.html' %}
+{% load render_partial %}
+{% load sorl_thumbnail %}
+{% load poll_extras %}
+{% block title %}Episode List{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container">
+            <div class="row">
+
+                <div class="col-sm-9 padding-right">
+                    {% if episodes %}
+                        <div class="features_items">
+                            <h2 class="title text-center">Episode List</h2>
+                            {% for items in episodes %}
+                                <div class="col-md-12">
+                                    {% for item in items %}
+                                        {% include 'includes/episode_item_partial.html' with episode=item col_size=3 %}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            <div class="clearfix"></div>
+                            <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                    <li>
+                                        <a class="cursor-pointer"
+                                           onclick="fillPage({{ page_obj.previous_page_number }})">Previous </a>
+                                    </li>
+                                {% endif %}
+                                {% for page_number in paginator.page_range %}
+                                    <li class="{% if page_obj.number == page_number %}active{% endif %}">
+                                        <a class="cursor-pointer"
+                                           onclick="fillPage({{ page_number }})">{{ page_number }}</a>
+                                    </li>
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <li>
+                                        <a class="cursor-pointer" onclick="fillPage({{ page_obj.next_page_number }})">Next</a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            There is no episodes
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="left-sidebar">
+                        {% render_partial 'contents.views.sidebar_categories_component' %}
+                        {% render_partial 'contents.views.sidebar_channels_component' %}
+                        {% render_partial 'contents.views.sidebar_tags_component' %}
+
+                        <form action="" method="get" id="page_form">
+                            <input type="hidden" name="page" id="page" value="{{ page_obj.number }}">
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

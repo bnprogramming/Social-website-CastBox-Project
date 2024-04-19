@@ -1,0 +1,5 @@
+<h2>Author : {{ object.provider.author | slice:15 }}</h2>
+<p style="font-size: 10px">Channel : {{ object.provider.name | slice:15 }}</p>
+<p style="font-size: 10px"><i class="fa fa-eye"></i> Views : {{ object.view_count }}</p>
+<p style="font-size: 10px"><i class="fa fa-heart"></i> Likes : {{ object.likes_count }}</p>
+<p style="font-size: 10px"><i class="fa fa-comment"></i> Comments : {{ object.comments_count }}</p>
