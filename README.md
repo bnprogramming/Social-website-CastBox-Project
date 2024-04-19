@@ -2,7 +2,7 @@
 **Django CastBox Sample**
 
 CastBox Sample is a Django app that clone the castbox website with django .
-Application development and testing with django v4.2
+Application development and testing with django v4.2 and Django Rest Framework v3.15.1
 Is use DTL , Js , HTML , CSS for this project
 
 
